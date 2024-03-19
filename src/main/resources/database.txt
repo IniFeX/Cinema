@@ -1,0 +1,49 @@
+CREATE TABLE IF NOT EXISTS public.directors
+(
+    director_id integer NOT NULL,
+    full_name character varying(50),
+    date_of_birth date,
+    CONSTRAINT directors_pkey PRIMARY KEY (director_id)
+);
+CREATE TABLE IF NOT EXISTS public.actors
+(
+    actor_id serial NOT NULL,
+    full_name character varying(50),
+    date_of_birth date,
+    CONSTRAINT actors_pkey PRIMARY KEY (actor_id)
+);
+CREATE TABLE IF NOT EXISTS public.films
+(
+    film_id serial NOT NULL,
+    name character varying(50),
+    director_id integer,
+    issued_at date,
+    CONSTRAINT films_pkey PRIMARY KEY (film_id),
+    CONSTRAINT fk_director_id FOREIGN KEY (director_id)
+        REFERENCES public.directors (director_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS public.actor_film
+(
+    actor_id integer,
+    film_id integer,
+    CONSTRAINT unique_pair UNIQUE (actor_id, film_id),
+    CONSTRAINT actor FOREIGN KEY (actor_id)
+        REFERENCES public.actors (actor_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT film FOREIGN KEY (film_id)
+        REFERENCES public.films (film_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS public.users
+(
+    user_id serial NOT NULL,
+    nickname character varying(30),
+    password character varying(30),
+    role character varying(10)
+);
